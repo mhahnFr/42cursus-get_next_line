@@ -1,10 +1,36 @@
 #include <stdlib.h>
+#include <stdbool.h>
+#include <unistd.h>
 
 #include "get_next_line.h"
 
-char	*ft_strchr(const char *s, int c);
-size_t	ft_strlen(const char *s);
-void	*ft_memcpy(void *dst, const void *src, size_t n);
+void	*ft_memcpy(void *dst, const void *src, size_t n)
+{
+	size_t	counter;
+
+	counter = 0;
+	if ((src != NULL || dst != NULL) && n > 0)
+	{
+		while (counter < n)
+		{
+			((char *) dst)[counter] = ((char *) src)[counter];
+			counter++;
+		}
+	}
+	return (dst);
+}
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	counter;
+
+	counter = 0;
+	while (s[counter] != '\0')
+	{
+		counter++;
+	}
+	return (counter);
+}
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -22,30 +48,47 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-size_t	ft_strlen(const char *s)
+bool	read_line(t_string_builder **builder, int fd)
 {
-	size_t	counter;
+	t_string_builder	*tmp;
+	char				*newline;
+	int					ret;
 
-	counter = 0;
-	while (s[counter] != '\0')
+	newline = NULL;
+	while (newline == NULL)
 	{
-		counter++;
+		tmp = string_builder_new();
+		ret = read(fd, tmp->part, BUFFER_SIZE);
+		if (ret <= -1)
+		{
+			free(tmp);
+			return (false);
+		}
+		else if (ret == 0)
+		{
+			free(tmp);
+			break ;
+		}
+		tmp->part[ret] = '\0';
+		tmp->new_line = ft_strchr(tmp->part, '\n');
+		newline = tmp->new_line;
+		string_builder_append(builder, tmp);
 	}
-	return (counter);
+	return (true);
 }
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+void	string_builder_append(t_string_builder **this,
+							t_string_builder *appendix)
 {
-	size_t	counter;
+	t_string_builder	*tmp;
 
-	counter = 0;
-	if ((src != NULL || dst != NULL) && n > 0)
+	if (*this == NULL)
 	{
-		while (counter < n)
-		{
-			((char *) dst)[counter] = ((char *) src)[counter];
-			counter++;
-		}
+		*this = appendix;
+		return ;
 	}
-	return (dst);
+	tmp = *this;
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	tmp->next = appendix;
 }
