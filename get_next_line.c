@@ -1,8 +1,3 @@
-#include <stdlib.h>
-#include <unistd.h>
-#include <strings.h>
-#include <stdbool.h>
-
 #include "get_next_line.h"
 
 t_string_builder	*string_builder_new(void)

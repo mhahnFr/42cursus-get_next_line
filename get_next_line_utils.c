@@ -1,5 +1,3 @@
-#include <stdlib.h>
-#include <stdbool.h>
 #include <unistd.h>
 
 #include "get_next_line.h"
