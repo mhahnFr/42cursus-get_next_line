@@ -5,9 +5,13 @@ t_string_builder	*string_builder_new(void)
 	t_string_builder	*this;
 
 	this = malloc(sizeof(t_string_builder));
-	this->new_line = NULL;
-	this->next = NULL;
-	this->start_offset = 0;
+	if (this != NULL)
+	{
+		this->new_line = NULL;
+		this->next = NULL;
+		this->start_offset = 0;
+		this->string_length = 0;
+	}
 	return (this);
 }
 
@@ -19,12 +23,7 @@ size_t	string_builder_size_nl(t_string_builder *this)
 	while (this != NULL)
 	{
 		if (this->new_line == NULL)
-		{
-			if (this->next != NULL)
-				size += (BUFFER_SIZE - this->start_offset);
-			else
-				size += ft_strlen(this->part + this->start_offset);
-		}
+			size += (this->string_length - this->start_offset);
 		else
 		{
 			size += (this->new_line - this->part) - this->start_offset + 1;
@@ -41,17 +40,18 @@ char	*string_builder_to_string_nl(t_string_builder *this)
 	size_t	mover;
 	size_t	length;
 
-	str = malloc(string_builder_size_nl(this) + 1);
+	str = NULL;
+	length = string_builder_size_nl(this);
+	if (length == 0)
+		return (NULL);
+	str = malloc(length + 1);
+	if (str == NULL)
+		return (NULL);
 	mover = 0;
 	while (this != NULL)
 	{
 		if (this->new_line == NULL)
-		{
-			if (this->next != NULL)
-				length = BUFFER_SIZE - this->start_offset;
-			else
-				length = ft_strlen(this->part + this->start_offset);
-		}
+			length = (this->string_length - this->start_offset);
 		else
 			length = (this->new_line - this->part) - this->start_offset + 1;
 		ft_memcpy(str + mover, this->part + this->start_offset, length);
@@ -80,17 +80,6 @@ t_string_builder	*string_builder_cut_nl(t_string_builder *this)
 	return (this);
 }
 
-bool	string_builder_has_new_line(t_string_builder *this)
-{
-	while (this != NULL)
-	{
-		if (this->new_line != NULL)
-			return (true);
-		this = this->next;
-	}
-	return (false);
-}
-
 char	*get_next_line(int fd)
 {
 	static t_string_builder	*builder = NULL;
@@ -103,11 +92,6 @@ char	*get_next_line(int fd)
 			return (NULL);
 	}
 	line = string_builder_to_string_nl(builder);
-	if (ft_strlen(line) == 0)
-	{
-		free(line);
-		line = NULL;
-	}
 	builder = string_builder_cut_nl(builder);
 	return (line);
 }

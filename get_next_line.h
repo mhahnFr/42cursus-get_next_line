@@ -8,13 +8,15 @@
  * A string builder part. It includes the actual string part of the size of
  * the specified buffer size plus one for the null terminator. There is also
  * the pointer to the newline character in the string part, if a newline
- * character is present. The offset indicates at which position to start.
- * Of course, there is also a pointer to the next part.
+ * character is present. The offset indicates at which position to start. The
+ * length of the string can also be stored. Of course, there is also a pointer
+ * to the next part.
  */
 typedef struct s_string_builder {
 	char					part[BUFFER_SIZE + 1];
 	char					*new_line;
 	size_t					start_offset;
+	size_t					string_length;
 	struct s_string_builder	*next;
 }	t_string_builder;
 
@@ -68,37 +70,41 @@ t_string_builder	*string_builder_new(void);
  * null terminator in the last string builder part. Returns the calculated
  * size.
  */
-size_t				string_builder_size_nl(t_string_builder *this);
+size_t				string_builder_size_nl(t_string_builder *thiss);
 
 /*
  * Creates a string consisting of all string builder parts until the newline
  * character or the end is reached. Returns a newly allocated and null
  * terminated string.
  */
-char				*string_builder_to_string_nl(t_string_builder *this);
+char				*string_builder_to_string_nl(t_string_builder *thiss);
 
 /*
  * Deletes the leading string builder parts before the part with the newline
  * character set. Sets then the offset to the position of the newline
  * character. Returns the cutted string builder.
  */
-t_string_builder	*string_builder_cut_nl(t_string_builder *this);
+t_string_builder	*string_builder_cut_nl(t_string_builder *thiss);
 
 /*
  * Checks each node if the newline character is set. Stops checking at the
  * first encountered newline. Returns true, if a newline is found within the
  * given string builder, false otherwise or if null is given.
  */
-bool				string_builder_has_new_line(t_string_builder *this);
+bool				string_builder_has_new_line(t_string_builder *thiss);
 
 /*
  * Appends the given string builder part to the given string builder. If the
  * string builder is null, the given appendix takes the first place in the
- * string builder.
+ * string builder. The function also sets the length information of the
+ * given appendix using the given length. Also, it adds the null terminator to
+ * the string of the given appendix.
  */
 void				string_builder_append(
-						t_string_builder **this,
-						t_string_builder *appendix);
+						t_string_builder **thiss,
+						t_string_builder *appendix,
+						int length);
 
 /* --- Util functions --- */
+
 #endif

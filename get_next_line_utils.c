@@ -18,31 +18,19 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	return (dst);
 }
 
-size_t	ft_strlen(const char *s)
+char	*ft_strchr(const char *s, int c)
 {
-	size_t	counter;
+	int	counter;
 
 	counter = 0;
 	while (s[counter] != '\0')
-	{
-		counter++;
-	}
-	return (counter);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	int	size;
-	int	counter;
-
-	size = ft_strlen(s);
-	counter = 0;
-	while (counter <= size)
 	{
 		if (s[counter] == (char) c)
 			return ((char *) &s[counter]);
 		counter++;
 	}
+	if (s[counter] == (char) c)
+		return ((char *) &s[counter]);
 	return (NULL);
 }
 
@@ -67,19 +55,21 @@ bool	read_line(t_string_builder **builder, int fd)
 			free(tmp);
 			break ;
 		}
-		tmp->part[ret] = '\0';
 		tmp->new_line = ft_strchr(tmp->part, '\n');
 		newline = tmp->new_line;
-		string_builder_append(builder, tmp);
+		string_builder_append(builder, tmp, ret);
 	}
 	return (true);
 }
 
 void	string_builder_append(t_string_builder **this,
-							t_string_builder *appendix)
+							t_string_builder *appendix,
+							int length)
 {
 	t_string_builder	*tmp;
 
+	appendix->string_length = length;
+	appendix->part[length] = '\0';
 	if (*this == NULL)
 	{
 		*this = appendix;
@@ -89,4 +79,15 @@ void	string_builder_append(t_string_builder **this,
 	while (tmp->next != NULL)
 		tmp = tmp->next;
 	tmp->next = appendix;
+}
+
+bool	string_builder_has_new_line(t_string_builder *this)
+{
+	while (this != NULL)
+	{
+		if (this->new_line != NULL)
+			return (true);
+		this = this->next;
+	}
+	return (false);
 }
