@@ -1,5 +1,5 @@
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 /*
  * Returns the next line of the file indicated by the given file descriptor.
  * If nothing else to read is left, or an error occures, null is returned.

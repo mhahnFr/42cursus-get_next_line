@@ -1,6 +1,6 @@
 #include <unistd.h>
 
-#include "get_next_line_utils.h"
+#include "get_next_line_utils_bonus.h"
 
 void	*ft_memcpy(void *dst, const void *src, size_t n)
 {
@@ -44,18 +44,18 @@ bool	read_line(t_string_builder **builder, int fd)
 	while (newline == NULL)
 	{
 		tmp = string_builder_new();
-		ret = read(fd, tmp->part, BUFFER_SIZE);
-		if (ret <= -1)
-		{
-			free(tmp);
+		if (tmp == NULL)
 			return (false);
-		}
-		else if (ret == 0)
+		ret = read(fd, tmp->part, BUFFER_SIZE);
+		if (ret <= 0)
 		{
 			free(tmp);
+			if (ret < 0)
+				return (false);
 			break ;
 		}
 		tmp->new_line = ft_strchr(tmp->part, '\n');
+		tmp->fd = fd;
 		newline = tmp->new_line;
 		string_builder_append(builder, tmp, ret);
 	}
@@ -79,6 +79,22 @@ void	string_builder_append(t_string_builder **this,
 	while (tmp->next != NULL)
 		tmp = tmp->next;
 	tmp->next = appendix;
+}
+
+void	string_builder_append_fd(t_string_builder **this,
+								t_string_builder *appendix)
+{
+	t_string_builder	*tmp;
+
+	if (*this == NULL)
+	{
+		*this = appendix;
+		return ;
+	}
+	tmp = *this;
+	while (tmp->next_fd != NULL)
+		tmp = tmp->next_fd;
+	tmp->next_fd = appendix;
 }
 
 bool	string_builder_has_new_line(t_string_builder *this)

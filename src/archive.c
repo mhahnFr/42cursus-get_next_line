@@ -2,7 +2,7 @@
  * This file includes some older functions, that are worth to be saved.
  */
 
-#include "get_next_line.h"
+#include "get_next_line_utils.h"
 #define BUFFER_SIZE 42
 
 /*

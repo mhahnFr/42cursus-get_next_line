@@ -1,15 +1,18 @@
 # The name of the library to create.
-NAME	=	gnl.a
+NAME		=	gnl.a
 
 # The source files needed for the library.
-SRC		=	get_next_line.c \
-			get_next_line_utils.c
+SRC			=	get_next_line_bonus.c \
+				get_next_line_utils_bonus.c
 
 # The flags to compile the files with.
-CFLAGS	=	-Wall -Werror -Wextra
+CFLAGS		=	-Wall -Werror -Wextra
 
 # A macro to get the object files for the corresponding source files.
-OBJ		=	$(patsubst %.c,%.o,$(SRC))
+OBJ			=	$(patsubst %.c,%.o,$(SRC))
+
+# The buffer size to be used by the get_next_line function.
+BUFFER_SIZE	=	64
 
 # Compiles the whole library.
 all: $(NAME)
@@ -20,7 +23,7 @@ $(NAME): $(OBJ)
 
 # Compiles each source file individually.
 %.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) -c -o $@ $< -D BUFFER_SIZE=$(BUFFER_SIZE)
 
 # Removes all object files.
 .phony: clean
