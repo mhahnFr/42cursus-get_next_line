@@ -2,8 +2,8 @@
 NAME		=	gnl.a
 
 # The source files needed for the library.
-SRC			=	get_next_line_bonus.c \
-				get_next_line_utils_bonus.c
+SRC			=	bonus/get_next_line_bonus.c \
+				bonus/get_next_line_utils_bonus.c
 
 # The flags to compile the files with.
 CFLAGS		=	-Wall -Werror -Wextra
