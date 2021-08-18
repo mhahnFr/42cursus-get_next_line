@@ -113,9 +113,11 @@ char				*string_builder_to_string_nl(t_string_builder *thiss);
 void				string_builder_cut_nl(t_string_builder **thiss);
 
 /*
- * Checks each node if the newline character is set. Stops checking at the
+ * First, searches for the appopriate node for the given file descriptor.
+ * Stores the result of that operation in the struct pointed to by original.
+ * Finally, checks each node if the newline character is set. Stops checking at the
  * first encountered newline. Returns true, if a newline is found within the
- * given string builder, false otherwise or if null is given.
+ * given string builder, false otherwise or if null is found.
  */
 bool				string_builder_get_has_new_line(t_string_builder **thiss,
 						t_string_builder **original,
