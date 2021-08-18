@@ -18,19 +18,17 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	return (dst);
 }
 
-char	*ft_strchr(const char *s, int c)
+void	*ft_memchr(const void *s, int c, size_t n)
 {
-	int	counter;
+	size_t	counter;
 
 	counter = 0;
-	while (s[counter] != '\0')
+	while (counter < n)
 	{
-		if (s[counter] == (char) c)
-			return ((char *) &s[counter]);
+		if (((unsigned char *) s)[counter] == (unsigned char) c)
+			return ((void *) &s[counter]);
 		counter++;
 	}
-	if (s[counter] == (char) c)
-		return ((char *) &s[counter]);
 	return (NULL);
 }
 
@@ -44,18 +42,17 @@ bool	read_line(t_string_builder **builder, int fd)
 	while (newline == NULL)
 	{
 		tmp = string_builder_new();
-		ret = read(fd, tmp->part, BUFFER_SIZE);
-		if (ret <= -1)
-		{
-			free(tmp);
+		if (tmp == NULL)
 			return (false);
-		}
-		else if (ret == 0)
+		ret = read(fd, tmp->part, BUFFER_SIZE);
+		if (ret <= 0)
 		{
 			free(tmp);
+			if (ret < 0)
+				return (false);
 			break ;
 		}
-		tmp->new_line = ft_strchr(tmp->part, '\n');
+		tmp->new_line = ft_memchr(tmp->part, '\n', ret);
 		newline = tmp->new_line;
 		string_builder_append(builder, tmp, ret);
 	}

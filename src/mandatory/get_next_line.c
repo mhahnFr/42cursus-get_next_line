@@ -76,7 +76,9 @@ t_string_builder	*string_builder_cut_nl(t_string_builder *this)
 	if (this != NULL)
 	{
 		this->start_offset = this->new_line - this->part + 1;
-		this->new_line = ft_strchr(this->part + this->start_offset, '\n');
+		this->new_line = ft_memchr(this->part + this->start_offset,
+				'\n',
+				this->string_length);
 	}
 	return (this);
 }

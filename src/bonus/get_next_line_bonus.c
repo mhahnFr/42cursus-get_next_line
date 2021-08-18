@@ -1,3 +1,4 @@
+#include "get_next_line_bonus.h"
 #include "get_next_line_utils_bonus.h"
 
 t_string_builder	*string_builder_new(void)
@@ -64,38 +65,33 @@ char	*string_builder_to_string_nl(t_string_builder *this)
 	return (str);
 }
 
-void	string_builder_cut_nl(t_string_builder **this)
+void	string_builder_cut_nl(t_string_builder **sb)
 {
 	t_string_builder	*tmp;
-	t_string_builder	*v_prev;
-	t_string_builder	*v_next;
+	t_string_builder	*start;
 
-	if (*this != NULL)
+	start = *sb;
+	while (*sb != NULL && (*sb)->new_line == NULL)
 	{
-		v_next = (*this)->next_fd;
-		v_prev = (*this)->previous_fd;
+		tmp = (*sb)->next;
+		free(*sb);
+		*sb = tmp;
 	}
-	while (*this != NULL && (*this)->new_line == NULL)
+	if (*sb != NULL)
 	{
-		tmp = (*this)->next;
-		free(*this);
-		*this = tmp;
+		(*sb)->start_offset = (*sb)->new_line - (*sb)->part + 1;
+		(*sb)->new_line = ft_memchr((*sb)->part + (*sb)->start_offset, '\n', (*sb)->string_length);
+		(*sb)->previous_fd = start->previous_fd;
+		(*sb)->next_fd = start->next_fd;
 	}
-	if (*this != NULL)
+	else if (start != NULL)
 	{
-		(*this)->start_offset = (*this)->new_line - (*this)->part + 1;
-		(*this)->new_line = ft_strchr((*this)->part + (*this)->start_offset, '\n');
-		(*this)->previous_fd = v_prev;
-		(*this)->next_fd = v_next;
+		if (start->previous_fd != NULL)
+			start->previous_fd->next_fd = start->next_fd;
+		if (start->next_fd != NULL)
+			start->next_fd->previous_fd = start->previous_fd;
+		*sb = start->next_fd;
 	}
-	else
-	{
-		if (v_prev != NULL)
-			v_prev->next_fd = v_next;		// ^
-		if (v_next != NULL)					// |
-			v_next->previous_fd = v_prev;	// | This is too much
-		*this = v_next;						// |
-	}										// v
 }
 
 char	*get_next_line(int fd)
@@ -106,30 +102,20 @@ char	*get_next_line(int fd)
 	char					*line;
 
 	current = builder;
-	while (current != NULL)
-	{
-		if (current->fd == fd)
-			break ;
-		current = current->next_fd;
-	}
-	tmp = current;
-	line = NULL;
-	if (!string_builder_has_new_line(current))
-	{
-		if (!read_line(&current, fd))
-			return (NULL);
-	}
+	if (!string_builder_get_has_new_line(&current, &tmp, fd)
+		&& !read_line(&current, fd))
+		return (NULL);
 	line = string_builder_to_string_nl(current);
 	string_builder_cut_nl(&current);
 	if (builder == NULL || tmp == builder)
 		builder = current;
 	else if (current != NULL && tmp == NULL)
 	{
-		tmp = builder;					// ^
-		while (tmp->next_fd != NULL)	// |
-			tmp = tmp->next_fd;			// |
-		tmp->next_fd = current;			// |This is too much
-		current->previous_fd = tmp;		// |
-	}									// |
-	return (line);						// v
+		tmp = builder;
+		while (tmp->next_fd != NULL)
+			tmp = tmp->next_fd;
+		tmp->next_fd = current;
+		current->previous_fd = tmp;
+	}
+	return (line);
 }

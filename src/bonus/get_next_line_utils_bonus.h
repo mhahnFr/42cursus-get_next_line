@@ -53,10 +53,12 @@ typedef struct s_string_builder {
 }	t_string_builder;
 
 /*
- * Returns a pointer to the first occurance of the given character in the given
- * string. If the given character is not found, null is returned.
+ * Iterates through the given buffer at most the given length amount of bytes.
+ * Compares the content as unsigned characters. Returns a pointer to the
+ * occurance of the given character, or null, if the given buffer does not
+ * contain the given character within the given length.
  */
-char				*ft_strchr(const char *s, int c);
+void				*ft_memchr(const void *s, int c, size_t n);
 
 /*
  * Calculates the length of the given string. It returns
@@ -115,7 +117,9 @@ void				string_builder_cut_nl(t_string_builder **thiss);
  * first encountered newline. Returns true, if a newline is found within the
  * given string builder, false otherwise or if null is given.
  */
-bool				string_builder_has_new_line(t_string_builder *thiss);
+bool				string_builder_get_has_new_line(t_string_builder **thiss,
+						t_string_builder **original,
+						int fd);
 
 /*
  * Appends the given string builder part to the given string builder. If the

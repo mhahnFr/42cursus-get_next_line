@@ -14,7 +14,7 @@
  */
 typedef struct s_string_builder {
 	/* The string which makes part of the builder. */
-	char					part[BUFFER_SIZE + 1];
+	char					part[BUFFER_SIZE];
 
 	/*
 	 * A pointer to the newline character in the part, or null if no newline
@@ -36,10 +36,12 @@ typedef struct s_string_builder {
 }	t_string_builder;
 
 /*
- * Returns a pointer to the first occurance of the given character in the given
- * string. If the given character is not found, null is returned.
+ * Iterates through the given buffer at most the given length amount of bytes.
+ * Compares the content as unsigned characters. Returns a pointer to the
+ * occurance of the given character, or null, if the given buffer does not
+ * contain the given character within the given length.
  */
-char				*ft_strchr(const char *s, int c);
+void				*ft_memchr(const void *s, int c, size_t n);
 
 /*
  * Calculates the length of the given string. It returns
