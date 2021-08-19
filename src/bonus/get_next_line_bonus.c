@@ -5,7 +5,7 @@ t_string_builder	*string_builder_new(void)
 {
 	t_string_builder	*this;
 
-	this = malloc(sizeof(t_string_builder));
+	this = malloc(sizeof(t_string_builder) + BUFFER_SIZE * sizeof(char));
 	if (this != NULL)
 	{
 		this->new_line = NULL;
@@ -65,24 +65,24 @@ char	*string_builder_to_string_nl(t_string_builder *this)
 	return (str);
 }
 
-void	string_builder_cut_nl(t_string_builder **sb)
+void	string_builder_cut_nl(t_string_builder **s)
 {
 	t_string_builder	*tmp;
 	t_string_builder	*start;
 
-	start = *sb;
-	while (*sb != NULL && (*sb)->new_line == NULL)
+	start = *s;
+	while (*s != NULL && (*s)->new_line == NULL)
 	{
-		tmp = (*sb)->next;
-		free(*sb);
-		*sb = tmp;
+		tmp = (*s)->next;
+		free(*s);
+		*s = tmp;
 	}
-	if (*sb != NULL)
+	if (*s != NULL)
 	{
-		(*sb)->start_offset = (*sb)->new_line - (*sb)->part + 1;
-		(*sb)->new_line = ft_memchr((*sb)->part + (*sb)->start_offset, '\n', (*sb)->string_length);
-		(*sb)->previous_fd = start->previous_fd;
-		(*sb)->next_fd = start->next_fd;
+		(*s)->start_offset = (*s)->new_line - (*s)->part + 1;
+		(*s)->new_line = ft_memchr((*s)->part + (*s)->start_offset, '\n', (*s)->string_length - (*s)->start_offset);
+		(*s)->previous_fd = start->previous_fd;
+		(*s)->next_fd = start->next_fd;
 	}
 	else if (start != NULL)
 	{
@@ -90,7 +90,7 @@ void	string_builder_cut_nl(t_string_builder **sb)
 			start->previous_fd->next_fd = start->next_fd;
 		if (start->next_fd != NULL)
 			start->next_fd->previous_fd = start->previous_fd;
-		*sb = start->next_fd;
+		*s = start->next_fd;
 	}
 }
 

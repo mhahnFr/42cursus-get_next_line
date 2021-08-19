@@ -5,7 +5,7 @@ t_string_builder	*string_builder_new(void)
 {
 	t_string_builder	*this;
 
-	this = malloc(sizeof(t_string_builder));
+	this = malloc(sizeof(t_string_builder) + BUFFER_SIZE * sizeof(char));
 	if (this != NULL)
 	{
 		this->new_line = NULL;
@@ -78,7 +78,7 @@ t_string_builder	*string_builder_cut_nl(t_string_builder *this)
 		this->start_offset = this->new_line - this->part + 1;
 		this->new_line = ft_memchr(this->part + this->start_offset,
 				'\n',
-				this->string_length);
+				this->string_length - this->start_offset);
 	}
 	return (this);
 }

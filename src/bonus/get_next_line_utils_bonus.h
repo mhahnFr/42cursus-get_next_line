@@ -15,9 +15,6 @@
  * descriptor.
  */
 typedef struct s_string_builder {
-	/* The string which makes part of the builder. */
-	char					part[BUFFER_SIZE + 1];
-
 	/*
 	 * A pointer to the newline character in the part, or null if no newline
 	 * character is present.
@@ -50,6 +47,9 @@ typedef struct s_string_builder {
 
 	/* A pointer to the next part of this string builder. */
 	struct s_string_builder	*next;
+
+	/* The string which makes part of the builder. */
+	char					part[];
 }	t_string_builder;
 
 /*
@@ -59,13 +59,6 @@ typedef struct s_string_builder {
  * contain the given character within the given length.
  */
 void				*ft_memchr(const void *s, int c, size_t n);
-
-/*
- * Calculates the length of the given string. It returns
- * the count of characters before the first null terminator
- * occurs. Counting starts at zero.
- */
-size_t				ft_strlen(const char *s);
 
 /*
  * Copies the given amount of bytes from the given source to

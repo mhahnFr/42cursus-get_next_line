@@ -66,7 +66,6 @@ void	string_builder_append(t_string_builder **this,
 	t_string_builder	*tmp;
 
 	appendix->string_length = length;
-	appendix->part[length] = '\0';
 	if (*this == NULL)
 	{
 		*this = appendix;
