@@ -68,9 +68,14 @@ char	*string_builder_to_string_nl(t_string_builder *this)
 void	string_builder_cut_nl(t_string_builder **s)
 {
 	t_string_builder	*tmp;
-	t_string_builder	*start;
+	t_string_builder	*prev;
+	t_string_builder	*next;
 
-	start = *s;
+	if (*s != NULL)
+	{
+		prev = (*s)->previous_fd;
+		next = (*s)->next_fd;
+	}
 	while (*s != NULL && (*s)->new_line == NULL)
 	{
 		tmp = (*s)->next;
@@ -81,16 +86,16 @@ void	string_builder_cut_nl(t_string_builder **s)
 	{
 		(*s)->start_offset = (*s)->new_line - (*s)->part + 1;
 		(*s)->new_line = ft_memchr((*s)->part + (*s)->start_offset, '\n', (*s)->string_length - (*s)->start_offset);
-		(*s)->previous_fd = start->previous_fd;
-		(*s)->next_fd = start->next_fd;
+		(*s)->previous_fd = prev;
+		(*s)->next_fd = next;
 	}
-	else if (start != NULL)
+	else
 	{
-		if (start->previous_fd != NULL)
-			start->previous_fd->next_fd = start->next_fd;
-		if (start->next_fd != NULL)
-			start->next_fd->previous_fd = start->previous_fd;
-		*s = start->next_fd;
+		if (prev != NULL)
+			prev->next_fd = next;
+		if (next != NULL)
+			next->previous_fd = prev;
+		*s = next;
 	}
 }
 
