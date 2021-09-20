@@ -1,5 +1,5 @@
 # The name of the library to create.
-NAME		=	gnl.a
+NAME		=	libgnl.a
 
 # The source files needed for the library.
 SRC			=	bonus/get_next_line_bonus.c \
