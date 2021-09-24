@@ -15,6 +15,7 @@ OBJ			=	$(patsubst %.c,%.o,$(SRC))
 BUFFER_SIZE	=	64
 
 # Compiles the whole library.
+.phony: all
 all: $(NAME)
 
 # Creates the library.
@@ -36,4 +37,5 @@ fclean: clean
 	- $(RM) $(NAME)
 
 # Removes everything created by this makefile and recompiles the library.
+.phony: re
 re: fclean all
