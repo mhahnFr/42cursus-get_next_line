@@ -41,7 +41,7 @@ typedef struct s_string_builder {
  * occurance of the given character, or null, if the given buffer does not
  * contain the given character within the given length.
  */
-void				*ft_memchr(const void *s, int c, size_t n);
+void				*gnl_memchr(const void *s, int c, size_t n);
 
 /*
  * Copies the given amount of bytes from the given source to
@@ -49,7 +49,7 @@ void				*ft_memchr(const void *s, int c, size_t n);
  * overlays. Use ft_memmove if an overlay of the memory could
  * be possible. Returns the given destination.
  */
-void				*ft_memcpy(void *dst, const void *src, size_t n);
+void				*gnl_memcpy(void *dst, const void *src, size_t n);
 
 /*
  * Reads one line from the file determined by the given file descriptor into

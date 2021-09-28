@@ -2,7 +2,7 @@
 
 #include "get_next_line_utils.h"
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+void	*gnl_memcpy(void *dst, const void *src, size_t n)
 {
 	size_t	counter;
 
@@ -18,7 +18,7 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	return (dst);
 }
 
-void	*ft_memchr(const void *s, int c, size_t n)
+void	*gnl_memchr(const void *s, int c, size_t n)
 {
 	size_t	counter;
 
@@ -52,7 +52,7 @@ bool	read_line(t_string_builder **builder, int fd)
 				return (false);
 			break ;
 		}
-		tmp->new_line = ft_memchr(tmp->part, '\n', ret);
+		tmp->new_line = gnl_memchr(tmp->part, '\n', ret);
 		newline = tmp->new_line;
 		string_builder_append(builder, tmp, ret);
 	}

@@ -55,7 +55,7 @@ char	*string_builder_to_string_nl(t_string_builder *this)
 			length = (this->string_length - this->start_offset);
 		else
 			length = (this->new_line - this->part) - this->start_offset + 1;
-		ft_memcpy(str + mover, this->part + this->start_offset, length);
+		gnl_memcpy(str + mover, this->part + this->start_offset, length);
 		mover += length;
 		this = this->next;
 	}
@@ -76,7 +76,7 @@ t_string_builder	*string_builder_cut_nl(t_string_builder *this)
 	if (this != NULL)
 	{
 		this->start_offset = this->new_line - this->part + 1;
-		this->new_line = ft_memchr(this->part + this->start_offset,
+		this->new_line = gnl_memchr(this->part + this->start_offset,
 				'\n',
 				this->string_length - this->start_offset);
 	}
